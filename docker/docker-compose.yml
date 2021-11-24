@@ -1,0 +1,24 @@
+version: "3.7"
+
+networks:
+  testing:
+
+services:
+  ci:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        PLUGIN_NAME: ${PLUGIN_NAME}
+        OPENPROJECT_BRANCH: ${OPENPROJECT_BRANCH:-v12.0.2}
+    environment:
+      RSPEC_RETRY_RETRY_COUNT: "${CI_RETRY_COUNT:-3}"
+      JOBS: "${CI_JOBS:-8}"
+    tmpfs:
+      - "/tmp"
+    volumes:
+      - "${PLUGIN_PATH}:/home/dev/plugin"
+      - "${CI_CACHE_PATH:-/tmp}/op-bundle:/usr/local/bundle"
+      - "${CI_CACHE_PATH:-/tmp}/op-node:/home/dev/openproject/frontend/node_modules"
+    networks:
+      - testing

@@ -1,0 +1,54 @@
+name: "openproject-plugin_test"
+description: "Test your OpenProject plugin"
+author: "bitcrowd"
+inputs:
+  pluginName:
+    required: true
+    description: "Name of the plugin to test as listed in the Gemfile.plugins"
+  openprojectVersion:
+    required: false
+    description: "Version of OpenProject to test against. Must be a branch or tag name from https://github.com/opf/openproject"
+    default: "v12.0.2"
+  testSteps:
+    required: false
+    description: "The test steps to use. Must be given in the order outlined in the default value but you can leave out some tests if you want."
+    default: "run-angular-unit run-rspec-unit run-rspec-features"
+runs:
+  using: "composite"
+  steps:
+    - name: build
+      env:
+        PLUGIN_NAME: ${{ inputs.pluginName }}
+        PLUGIN_PATH: ${{ github.workspace }}
+        OPENPROJECT_BRANCH: ${{ inputs.openprojectVersion }}
+        LOCAL_DEV_CHECK: "1"
+        CI_RETRY_COUNT: "3"
+        CI_CACHE_PATH: "/tmp/cache"
+        CI_JOBS: "8"
+      shell: "bash"
+      run: |
+        docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml build --pull ci
+    - name: test
+      env:
+        PLUGIN_NAME: ${{ inputs.pluginName }}
+        PLUGIN_PATH: ${{ github.workspace }}
+        OPENPROJECT_BRANCH: ${{ inputs.openprojectVersion }}
+        LOCAL_DEV_CHECK: "1"
+        CI_RETRY_COUNT: "3"
+        CI_CACHE_PATH: "/tmp/cache"
+        CI_JOBS: "8"
+      shell: "bash"
+      run: |
+        docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml run ci setup-tests ${{ inputs.testSteps }}
+    - name: cleanup
+      env:
+        PLUGIN_NAME: ${{ inputs.pluginName }}
+        PLUGIN_PATH: ${{ github.workspace }}
+        OPENPROJECT_BRANCH: ${{ inputs.openprojectVersion }}
+        LOCAL_DEV_CHECK: "1"
+        CI_RETRY_COUNT: "3"
+        CI_CACHE_PATH: "/tmp/cache"
+        CI_JOBS: "8"
+      shell: "bash"
+      run: |
+        docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml down --remove-orphans -t 10
