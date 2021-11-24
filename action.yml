@@ -39,10 +39,26 @@ runs:
       run: |
         docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml build --pull ci
     - name: test
+      env:
+        PLUGIN_NAME: ${{ inputs.pluginName }}
+        PLUGIN_PATH: ${{ github.workspace }}
+        OPENPROJECT_BRANCH: ${{ inputs.openprojectVersion }}
+        LOCAL_DEV_CHECK: "1"
+        CI_RETRY_COUNT: "3"
+        CI_CACHE_PATH: "/tmp/cache"
+        CI_JOBS: "8"
       shell: 'bash'
       run: |
         docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml run ci setup-tests ${{ inputs.testSteps }}
     - name: cleanup
+      env:
+        PLUGIN_NAME: ${{ inputs.pluginName }}
+        PLUGIN_PATH: ${{ github.workspace }}
+        OPENPROJECT_BRANCH: ${{ inputs.openprojectVersion }}
+        LOCAL_DEV_CHECK: "1"
+        CI_RETRY_COUNT: "3"
+        CI_CACHE_PATH: "/tmp/cache"
+        CI_JOBS: "8"
       shell: 'bash'
       run: |
         docker-compose -f ${{ github.action_path }}/docker/docker-compose.yml down --remove-orphans -t 10
