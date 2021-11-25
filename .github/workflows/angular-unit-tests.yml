@@ -17,6 +17,12 @@ jobs:
       LOCAL_DEV_CHECK: 1
       PLUGIN_NAME: ${{ inputs.plugin_name }}
     steps:
+      - name: checkout plugin test repo
+        uses: actions/checkout@v2
+        with:
+          repository: bitcrowd/openproject-plugin_test
+          path: /tmp/plugin-repo
+          ref: feat/try-to-use-docker-from-this-repo
       - name: build
         run: |
           docker-compose --version
