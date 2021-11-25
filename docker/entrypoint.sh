@@ -60,8 +60,9 @@ fi
 
 if [ "$1" == "run-angular-unit" ]; then
 	shift
-	chown $USER:$USER /home/$USER/openproject/frontend/node_modules
-	if ! execute "cd frontend && npm install && npm run test -- --include=src/app/features/plugins/linked/${PLUGIN_FOLDER_NAME}"; then
+	echo "install dependencies ${USER} ${id}"
+	execute "npm run postinstall"
+	if ! execute "cd frontend && npm run test -- --include=src/app/features/plugins/linked/${PLUGIN_FOLDER_NAME}"; then
 		cleanup
 		exit 1
 	else
