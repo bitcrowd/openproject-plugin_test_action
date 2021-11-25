@@ -1,96 +1,30 @@
-# openproject-plugin_test_action
-A GitHub Action for testing OpenProject plugins
+# OpenProject Plugin CI
 
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+This action works with your custom plugin to automate testing and linting.
 
-## Code in Main
+## What Works
 
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
+- Angular unit testing
+- Rspec unit tests
 
-Install the dependencies  
-```bash
-$ npm install
-```
+## Work In Progress
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
+- Linting
+- Rspec features tests
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+## Usage
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+In your workflow file, add a step with the following:
 
-...
-```
-
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
-
-```yaml
-uses: ./
+```yml
+uses: bitcrowd/openproject-plugin_test_action@v1
 with:
-  milliseconds: 1000
+  # Name of the plugin to test as listed in the Gemfile.plugins
+  pluginName: ""
+  # Version of OpenProject to test against. Must be a branch or tag name from https://github.com/opf/openproject.
+  # Default: v12.0.2
+  openprojectVersion: ""
+  # The test steps to use. Must be given in the order outlined in the default value but you can leave out some tests if you want.
+  # Default: run-angular-unit run-rspec-unit run-rspec-features run-frontend-lint
+  testSteps: ""
 ```
-
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
-
-## Usage:
-
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
