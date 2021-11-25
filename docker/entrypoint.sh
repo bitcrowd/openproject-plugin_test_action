@@ -60,7 +60,7 @@ fi
 
 if [ "$1" == "run-angular-unit" ]; then
 	shift
-	echo "install dependencies ${USER} ${id}"
+	echo "install dependencies ${USER} ${UID} $(id)"
 	execute "npm run postinstall"
 	if ! execute "cd frontend && npm run test -- --include=src/app/features/plugins/linked/${PLUGIN_FOLDER_NAME}"; then
 		cleanup
