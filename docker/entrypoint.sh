@@ -6,7 +6,6 @@ export PGBIN="/usr/lib/postgresql/$PGVERSION/bin"
 export JOBS="${CI_JOBS:=$(nproc)}"
 # for parallel rspec
 export PARALLEL_TEST_PROCESSORS=$JOBS
-echo "current user info ${USER} ${UID} $(id)"
 
 # if from within docker
 if [ $(id -u) -eq 0 ]; then
@@ -20,7 +19,7 @@ if [ $(id -u) -eq 0 ]; then
 	mkdir -p /home/$USER/openproject/frontend/node_modules
 	mkdir -p /home/$USER/openproject/tmp
 	chown $USER:$USER /usr/local/bundle
-	chown $USER:$USER /home/$USER/openproject/frontend/node_modules
+	chown -R $USER:$USER /home/$USER/openproject/frontend/node_modules
 	chown $USER:$USER /home/$USER/openproject/tmp
 fi
 
@@ -61,9 +60,7 @@ fi
 
 if [ "$1" == "run-angular-unit" ]; then
 	shift
-	echo "install dependencies ${USER} ${UID} $(id)"
-	execute "npm run postinstall"
-	if ! execute "cd frontend && npm run test -- --include=src/app/features/plugins/linked/${PLUGIN_FOLDER_NAME}"; then
+	if ! execute "cd frontend && npm install && npm run test -- --include=src/app/features/plugins/linked/${PLUGIN_FOLDER_NAME}"; then
 		cleanup
 		exit 1
 	else
