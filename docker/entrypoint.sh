@@ -83,8 +83,10 @@ fi
 
 if [ "$1" == "run-rspec-features" ]; then
 	shift
-	execute "npm run postinstall"
-	
+	execute "cd frontend; npm install ; cd -"
+	execute "bundle exec rake assets:precompile"
+	execute "cp -rp config/frontend_assets.manifest.json public/assets/frontend_assets.manifest.json"
+
 	if ! execute "time bundle exec rspec --pattern '../plugin/spec/features/**/*_spec.rb'" ; then
 		execute "cat tmp/parallel_summary.log"
 		cleanup
