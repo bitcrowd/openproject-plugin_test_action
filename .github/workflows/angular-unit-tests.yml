@@ -23,6 +23,11 @@ jobs:
           repository: bitcrowd/openproject-plugin_test
           path: /tmp/plugin-repo
           ref: feat/try-to-use-docker-from-this-repo
+      - name: see files
+        run: |
+          ls
+          ls /tmp
+          ls /tmp/plugin-repo
       - name: build
         run: |
           docker-compose --version
