@@ -6,6 +6,7 @@ export PGBIN="/usr/lib/postgresql/$PGVERSION/bin"
 export JOBS="${CI_JOBS:=$(nproc)}"
 # for parallel rspec
 export PARALLEL_TEST_PROCESSORS=$JOBS
+echo "current user info ${USER} ${UID} $(id)"
 
 # if from within docker
 if [ $(id -u) -eq 0 ]; then
