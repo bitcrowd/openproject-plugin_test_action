@@ -16,16 +16,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: debug
-      shell: "bash"
-      run: |
-        echo "github action path"
-        ls -la ${{ github.action_path}}
-        echo "pwd"
-        pwd
-        ls -la
-        echo $GITHUB_WORKSPACE
-        echo ${{github.workspace}}
     - name: build
       env:
         PLUGIN_NAME: ${{ inputs.pluginName }}
