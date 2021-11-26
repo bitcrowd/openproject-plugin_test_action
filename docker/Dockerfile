@@ -48,7 +48,7 @@ RUN git clone --depth 1 --branch "$OPENPROJECT_BRANCH" https://github.com/opf/op
 RUN echo "group :opf_plugins do\n\tgem '$PLUGIN_NAME', path: '~/plugin'\nend" > /home/$USER/openproject/Gemfile.plugins
 VOLUME [ "/usr/local/bundle", "/home/$USER/plugin", "/home/$USER/openproject/tmp" ]
 
-RUN chown -hR dev /home/$USER
+RUN chown -hR $USER /home/$USER
 
 WORKDIR /home/$USER/openproject
 
